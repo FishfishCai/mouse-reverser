@@ -1,0 +1,4 @@
+mouse-reverser
+*.o
+.DS_Store
+.build/

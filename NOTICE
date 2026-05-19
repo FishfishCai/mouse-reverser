@@ -1,0 +1,26 @@
+mouse-reverser
+Copyright 2026 Wenxi Cai
+
+Licensed under the Apache License, Version 2.0 (see LICENSE).
+
+This product is derived from Scroll Reverser, originally created by
+Nicholas Moore and distributed under the Apache License, Version 2.0:
+
+    Scroll Reverser
+    Copyright 2011 Nicholas Moore
+    https://pilotmoon.com/scrollreverser/
+    https://github.com/pilotmoon/Scroll-Reverser
+
+In particular, the following ideas are borrowed from that work:
+
+  * The heuristic for distinguishing a mouse from a trackpad based on a
+    passive gesture event tap and recent multi-touch activity.
+  * Modifying both the CGEvent scroll-delta fields and the underlying
+    IOHID event fields (via the private CGEventCopyIOHIDEvent /
+    IOHIDEventSetFloatValue SPIs) to make reversal effective for
+    high-precision continuous-scroll devices.
+  * The convention of setting DeltaAxis fields before PointDelta /
+    FixedPtDelta to preserve smooth scrolling.
+
+The name "Scroll Reverser" and the original application icon are trademarks
+of Nicholas Moore and are not used by this project.
