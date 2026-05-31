@@ -14,7 +14,7 @@ macOS with Xcode Command Line Tools (`swift --version` to check;
 ## Install
 
 ```sh
-git clone https://github.com/<you>/mouse-reverser.git
+git clone https://github.com/FishfishCai/mouse-reverser.git
 cd mouse-reverser
 ./build.sh
 ./mouse-reverser
