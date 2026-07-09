@@ -1,4 +1,5 @@
-mouse-reverser
+reverser
+.reverser.pid
 *.o
 .DS_Store
 .build/

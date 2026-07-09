@@ -1,7 +1,7 @@
-# mouse-reverser
+# reverser
 
-A minimal macOS background service that reverses **mouse** scroll direction
-while leaving the trackpad untouched.
+A minimal macOS tool that reverses **mouse** scroll direction while leaving
+the trackpad untouched.
 
 Derived from [Scroll Reverser](https://github.com/pilotmoon/Scroll-Reverser)
 by Nicholas Moore, same license.
@@ -17,27 +17,19 @@ macOS with Xcode Command Line Tools (`swift --version` to check;
 git clone https://github.com/FishfishCai/mouse-reverser.git
 cd mouse-reverser
 ./build.sh
-./mouse-reverser
+./reverser
 ```
 
 The first run fails because Accessibility permission hasn't been granted.
 Open **System Settings → Privacy & Security → Accessibility**, add
-`./mouse-reverser`, toggle it on, then re-run. The binary self-installs a
-LaunchAgent plist; from the next login onward `launchd` starts the service
-automatically. To start it under `launchd` immediately:
-
-```sh
-launchctl load ~/Library/LaunchAgents/local.mouse-reverser.plist
-```
+`./reverser`, toggle it on, then re-run. `reverser` then runs in the
+foreground and reverses mouse scroll until you quit it (Ctrl-C); background
+it with `./reverser &` if you want it to keep running.
 
 ## Uninstall
 
-```sh
-launchctl unload ~/Library/LaunchAgents/local.mouse-reverser.plist
-rm ~/Library/LaunchAgents/local.mouse-reverser.plist
-```
-
-Remove the entry from System Settings → Privacy & Security → Accessibility.
+Quit the process, then remove the entry from
+System Settings → Privacy & Security → Accessibility.
 
 ## License
 

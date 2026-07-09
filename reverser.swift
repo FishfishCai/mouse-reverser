@@ -1,9 +1,8 @@
 import Cocoa
 import Darwin
 
-private let label = "local.mouse-reverser"
+private let label = "local.reverser"
 private let lockPath = "/tmp/\(label).lock"
-private var plistPath: String { "\(NSHomeDirectory())/Library/LaunchAgents/\(label).plist" }
 private let nanosPerMs: UInt64 = 1_000_000
 private let gestureEventType: UInt32 = 29
 
@@ -28,29 +27,6 @@ private func acquireSingletonLock() -> Bool {
     let fd = open(lockPath, O_CREAT | O_RDWR, 0o644)
     guard fd >= 0 else { return true }
     return flock(fd, LOCK_EX | LOCK_NB) == 0
-}
-
-private func installLaunchAgentIfNeeded() {
-    if FileManager.default.fileExists(atPath: plistPath) { return }
-    let agentsDir = (plistPath as NSString).deletingLastPathComponent
-    try? FileManager.default.createDirectory(
-        atPath: agentsDir, withIntermediateDirectories: true)
-    let plist = """
-    <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-    <plist version="1.0">
-    <dict>
-        <key>Label</key>            <string>\(label)</string>
-        <key>ProgramArguments</key>
-        <array>
-            <string>\(currentExecutablePath())</string>
-        </array>
-        <key>RunAtLoad</key>        <true/>
-        <key>KeepAlive</key>        <true/>
-    </dict>
-    </plist>
-    """
-    try? plist.write(toFile: plistPath, atomically: true, encoding: .utf8)
 }
 
 private enum ScrollSource { case mouse, trackpad }
@@ -166,5 +142,4 @@ private func startEventTaps() {
 }
 
 guard acquireSingletonLock() else { exit(0) }
-installLaunchAgentIfNeeded()
 startEventTaps()
