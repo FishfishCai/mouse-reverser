@@ -1,0 +1,36 @@
+#!/bin/sh
+# reverser toggle: running -> stop, stopped -> start.
+# Symlink onto your $PATH: ln -sf "$PWD/reverser-toggle" ~/.local/bin/reverser
+SELF="$0"; [ -L "$SELF" ] && SELF="$(readlink "$SELF")"
+DIR="$(cd "$(dirname "$SELF")" && pwd)"
+PIDFILE="$DIR/.reverser.pid"
+
+running() {
+    [ -f "$PIDFILE" ] && kill -0 "$(cat "$PIDFILE")" 2>/dev/null && return 0
+    pgrep -x reverser >/dev/null 2>&1
+}
+
+if running; then
+    [ -f "$PIDFILE" ] && { kill -9 "$(cat "$PIDFILE")" 2>/dev/null; rm -f "$PIDFILE"; }
+    pkill -9 -x reverser 2>/dev/null
+    echo "reverser stopped"
+    exit 0
+fi
+
+# stopped -> start: clear any stale state first
+if [ -f "$PIDFILE" ]; then
+    kill -9 "$(cat "$PIDFILE")" 2>/dev/null
+    rm -f "$PIDFILE"
+fi
+pkill -9 -x reverser 2>/dev/null
+sleep 1
+
+"$DIR/reverser" > /tmp/reverser.log 2>&1 &
+echo $! > "$PIDFILE"
+
+sleep 1
+if ! kill -0 "$(cat "$PIDFILE")" 2>/dev/null; then
+    echo "reverser failed to start (see /tmp/reverser.log)"
+    exit 1
+fi
+echo "reverser started (PID $(cat "$PIDFILE"))"

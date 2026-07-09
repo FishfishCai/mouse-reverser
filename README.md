@@ -27,48 +27,15 @@ foreground and reverses mouse scroll until you quit it (Ctrl-C).
 
 ## Start/stop toggle command
 
-The compiled binary lives in the repo; the convenient way to run it is a small
-toggle — run `reverser` to start the background process, run `reverser` again
-to stop it. Save the script below into **any directory on your `$PATH`** (e.g.
-`~/.local/bin`, `/usr/local/bin`, or your own bin dir), name it `reverser`,
-`chmod +x` it, and point `DIR` at wherever you built the binary:
+The repo ships **`reverser-toggle`**, a start/stop wrapper — run it once to
+start the background process, run it again to stop it. It locates the binary
+next to itself, so just symlink it onto a directory in your `$PATH`:
 
 ```sh
-#!/bin/sh
-# reverser toggle: running -> stop, stopped -> start.
-DIR=""      # set to your build directory
-PIDFILE="$DIR/.reverser.pid"
-
-running() {
-    [ -f "$PIDFILE" ] && kill -0 "$(cat "$PIDFILE")" 2>/dev/null && return 0
-    pgrep -x reverser >/dev/null 2>&1
-}
-
-if running; then
-    [ -f "$PIDFILE" ] && { kill -9 "$(cat "$PIDFILE")" 2>/dev/null; rm -f "$PIDFILE"; }
-    pkill -9 -x reverser 2>/dev/null
-    echo "reverser stopped"
-    exit 0
-fi
-
-# stopped -> start: clear any stale state first
-if [ -f "$PIDFILE" ]; then
-    kill -9 "$(cat "$PIDFILE")" 2>/dev/null
-    rm -f "$PIDFILE"
-fi
-pkill -9 -x reverser 2>/dev/null
-sleep 1
-
-"$DIR/reverser" > /tmp/reverser.log 2>&1 &
-echo $! > "$PIDFILE"
-
-sleep 1
-if ! kill -0 "$(cat "$PIDFILE")" 2>/dev/null; then
-    echo "reverser failed to start (see /tmp/reverser.log)"
-    exit 1
-fi
-echo "reverser started (PID $(cat "$PIDFILE"))"
+ln -sf "$(pwd)/reverser-toggle" ~/.local/bin/reverser
 ```
+
+Now `reverser` starts it and `reverser` again stops it.
 
 ## License
 
