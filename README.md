@@ -36,7 +36,7 @@ to stop it. Save the script below into **any directory on your `$PATH`** (e.g.
 ```sh
 #!/bin/sh
 # reverser toggle: running -> stop, stopped -> start.
-DIR="$HOME/Documents/app/reverser"      # adjust to your build directory
+DIR=""      # set to your build directory
 PIDFILE="$DIR/.reverser.pid"
 
 running() {
@@ -69,17 +69,6 @@ if ! kill -0 "$(cat "$PIDFILE")" 2>/dev/null; then
 fi
 echo "reverser started (PID $(cat "$PIDFILE"))"
 ```
-
-If that bin dir isn't on your `PATH` yet (zsh is the default macOS shell):
-
-```sh
-echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc && source ~/.zshrc
-```
-
-## Uninstall
-
-Quit the process, then remove the entry from
-System Settings → Privacy & Security → Accessibility.
 
 ## License
 
